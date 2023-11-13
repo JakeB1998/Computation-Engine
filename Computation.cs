@@ -1,4 +1,7 @@
-public class Computation
+namespace ComputationEngine
 {
-    
+    public class Computation
+    {
+        
+    }
 }

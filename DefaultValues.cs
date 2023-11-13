@@ -1,5 +1,3 @@
-using Unity.Mathematics;
-
 namespace ComputationEngine
 {
     public static class DefaultValues
