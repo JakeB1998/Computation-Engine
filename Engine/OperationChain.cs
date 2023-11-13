@@ -48,8 +48,9 @@ namespace ComputationEngine
                 string o = "[";
                 foreach(Operation operation in _chain)
                 {
-                    o += "\n" + operation?.ToString();
+                    o += "" + operation?.ToString() +", ";
                 }
+                o  = o.Substring(0, o.Length - 2);
                 o += "]";
                 return o;
             }

@@ -1,27 +1,52 @@
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEngine.Rendering;
 
-public abstract class Operation : IComputable
+
+namespace ComputationEngine
 {
-    private float _num1;
-    private float _num2;
-
-    public float Num1
+    public abstract class Operation : IComputable
     {
-        get => _num1;
-        set => _num1 = value;
-    }
+        private float _num1;
+        private float _num2;
 
-    public float Num2
-    {
-        get => _num2;
-        set => _num2 = value;
-    }
+        private OperationType _operationType;
 
-    public abstract float Compute(float num1, float num2);
+        protected Operation()
+        {
+            _operationType = OperationType.NonSet;
+        }
 
-    public virtual float Compute()
-    {
-        return this.Compute(_num1, _num2);
+        protected Operation(float num1, float num2) : this()
+        {
+            _num1 = num1;
+            _num2 = num2;
+        }
+
+        protected Operation(float num1, float num2, OperationType operationType) : this(num1, num2)
+        {
+            _operationType = operationType;
+        }
+
+        public float Num1
+        {
+            get => _num1;
+            set => _num1 = value;
+        }
+
+        public float Num2
+        {
+            get => _num2;
+            set => _num2 = value;
+        }
+
+        public abstract float Compute(float num1, float num2);
+
+        public virtual float Compute()
+        {
+            return this.Compute(_num1, _num2);
+        }
+
+        public override string ToString()
+        {
+            return $"{_num1} {SymbolHelper.ToSymbolRepresentation(_operationType)} {_num2} => {this.Compute().ToString()}";
+        }
     }
 }
