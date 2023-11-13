@@ -40,6 +40,32 @@ namespace ComputationEngine
             return float.MinValue;
         }
 
+        public string ToProblemRepr()
+        {
+            if (_chain != null && _chain.Count > 1)
+            {
+                string o = "";
+                for(int i = 0; i < _chain.Count; i++)
+                {
+                    Operation item = _chain[i];
+
+                    if (i == 0)
+                    {
+                        o += $" {item.Num1} {item.ToSymbolRepr()} {item.Num2}";
+                    }
+                    else
+                    {
+                        o += $" {item.ToSymbolRepr()} {item.Num2}";
+                    }
+                    
+                    
+                }
+                return o;
+
+            }
+            return null;
+        }
+
 
         public override string ToString()
         {
