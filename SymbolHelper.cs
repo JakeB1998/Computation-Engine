@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -6,6 +7,16 @@ namespace ComputationEngine
 {
     public static class SymbolHelper
     {
+        private static readonly Dictionary<OperationType, string> OPPERAND_MAP = new Dictionary<OperationType, string>
+        {
+            {OperationType.Addition, "+"},
+            {OperationType.Subtraction,  "-"},
+            {OperationType.Multiplication, "*"},
+            {OperationType.Division, "/"},
+            {OperationType.Exponent, "^"}
+
+        };
+
         private static readonly string[] OPPERANDS = new string[]
         {
             "+", "-", "*", "/", "^"
@@ -13,27 +24,12 @@ namespace ComputationEngine
 
         public static bool IsOpperand(string opperand)
         {
-            return OPPERANDS.Contains(opperand);
+            return OPPERAND_MAP.Values.Contains(opperand);
         }
    
         public static string ToSymbolRepresentation(OperationType type)
         {
-            switch(type)
-            {
-                case OperationType.Addition:
-                    return "+";
-                case OperationType.Subtraction:
-                    return "-";
-                case OperationType.Multiplication:
-                    return "*";
-                case OperationType.Division:
-                    return "/";
-                case OperationType.Exponent:
-                    return "^";
-                default:
-                    break;
-            }
-            return null;
+            return OPPERAND_MAP.GetValueOrDefault(type, null);
         }
         
     }
