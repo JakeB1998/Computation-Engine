@@ -17,11 +17,6 @@ namespace ComputationEngine
 
         };
 
-        private static readonly string[] OPPERANDS = new string[]
-        {
-            "+", "-", "*", "/", "^"
-        };
-
         public static bool IsOpperand(string opperand)
         {
             return OPPERAND_MAP.Values.Contains(opperand);

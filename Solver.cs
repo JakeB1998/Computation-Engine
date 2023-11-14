@@ -47,7 +47,6 @@ namespace ComputationEngine
 
         public static float QuickSolve(string problem)
         {
-            
             if (problem == null || problem.Length < 1)
                 return DefaultValues.FLOAT;
 
@@ -89,7 +88,6 @@ namespace ComputationEngine
 
                     if (token == ')')
                     {
-                            
                         while(opperands.Count > 0 && opperands.Peek() != "(")
                         {
                             // UnityEngine.Debug.Log(string.Join(",", numbers.ToArray()));
@@ -107,7 +105,6 @@ namespace ComputationEngine
 
                     opperands.Push(token.ToString());
                     digit = "";
-
                 }
                 else
                 {
@@ -126,8 +123,6 @@ namespace ComputationEngine
                 digit = "";
             }
 
-            // UnityEngine.Debug.Log(string.Join(",", numbers.ToArray()));
-            // UnityEngine.Debug.Log(string.Join(",", opperands.ToArray()));
             if (opperands.Count > 0)
             {
                 while (opperands.Count > 0)
