@@ -6,7 +6,7 @@ namespace ComputationEngine
         Division,
         Multiplication,
         Addition,
-        Subtraction
-        
+        Subtraction,
+        Exponent
     }
 }
