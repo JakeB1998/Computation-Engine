@@ -2,16 +2,13 @@ using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using UnityEngine.Analytics;
 
 namespace ComputationEngine
 {
     public static class Solver
     {
-        
-
-        public static float QuickSolve(string problem)
-        {
-            Dictionary<string, int> pemdasMap = new Dictionary<string, int>
+        private static readonly Dictionary<string, int> pemdasMap = new Dictionary<string, int>
             {
                 {SymbolHelper.ToSymbolRepresentation(OperationType.Addition), 1},
                 {SymbolHelper.ToSymbolRepresentation(OperationType.Subtraction), 1},
@@ -19,6 +16,38 @@ namespace ComputationEngine
                 {SymbolHelper.ToSymbolRepresentation(OperationType.Division), 2},
                 {SymbolHelper.ToSymbolRepresentation(OperationType.Exponent), 3}
             };
+
+        private static void PopAndCalc(Stack<string> numbers, Stack<string> opperands)
+        {
+            string opperand = opperands.Pop();
+            float num2 = float.Parse(numbers.Pop());
+            float num1 = float.Parse(numbers.Pop());
+            // UnityEngine.Debug.Log($"Doing: {num1}{opperand}{num2}");
+            switch(opperand)
+            {
+                case "+":
+                    numbers.Push((num1 + num2).ToString());
+                    break;
+                case "-":
+                    numbers.Push((num1 - num2).ToString());
+                    break;
+                case "*":
+                    numbers.Push((num1 * num2).ToString());
+                    break;
+                case "/":
+                    numbers.Push((num1 / num2).ToString());
+                    break;
+                case "^":
+                    numbers.Push(Math.Pow(num1, num2).ToString());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static float QuickSolve(string problem)
+        {
+            
             if (problem == null || problem.Length < 1)
                 return DefaultValues.FLOAT;
 
@@ -36,7 +65,7 @@ namespace ComputationEngine
                     // UnityEngine.Debug.Log($"[{i}]Digit: {token}");
                     digit += token;
                 }
-                else if (SymbolHelper.IsOpperand(token.ToString()) || token == '.')
+                else if (SymbolHelper.IsOpperand(token.ToString()) || token == '.' || token == ')' || token == '(')
                 {
                     // UnityEngine.Debug.Log($"[{i}]Symbol: {token}");
                     if (token == '.')
@@ -49,35 +78,31 @@ namespace ComputationEngine
                     {
                         // UnityEngine.Debug.Log($"Number: {digit}");
                         numbers.Push(digit);
+                        digit = "";
                     }
 
-                    while (opperands.Count > 0 && pemdasMap.GetValueOrDefault(opperands.Peek()) >= pemdasMap.GetValueOrDefault(token.ToString()))
+                    if (token == '(')
                     {
-                        string opperand = opperands.Pop();
-                        float num2 = float.Parse(numbers.Pop());
-                        float num1 = float.Parse(numbers.Pop());
-                        // UnityEngine.Debug.Log($"Doing: {num1}{opperand}{num2}");
-                        switch(opperand)
-                        {
-                            case "+":
-                                numbers.Push((num1 + num2).ToString());
-                                break;
-                            case "-":
-                                numbers.Push((num1 - num2).ToString());
-                                break;
-                            case "*":
-                                numbers.Push((num1 * num2).ToString());
-                                break;
-                            case "/":
-                                numbers.Push((num1 / num2).ToString());
-                                break;
-                            case "^":
-                                numbers.Push((Math.Pow(num1, num2)).ToString());
-                                break;
-                            default:
-                                break;
-                        }
+                        opperands.Push("(");
+                        continue;
+                    }
 
+                    if (token == ')')
+                    {
+                            
+                        while(opperands.Count > 0 && opperands.Peek() != "(")
+                        {
+                            // UnityEngine.Debug.Log(string.Join(",", numbers.ToArray()));
+                            // UnityEngine.Debug.Log(string.Join(",", opperands.ToArray()));
+                            PopAndCalc(numbers, opperands);
+                        }
+                        opperands.Pop();
+                        continue;
+                    }
+
+                    while (opperands.Count > 0 && pemdasMap.GetValueOrDefault(opperands.Peek(), -1) >= pemdasMap.GetValueOrDefault(token.ToString()))
+                    {
+                        PopAndCalc(numbers, opperands);
                     }
 
                     opperands.Push(token.ToString());
@@ -107,31 +132,7 @@ namespace ComputationEngine
             {
                 while (opperands.Count > 0)
                 {
-                    string opperand = opperands.Pop();
-                    float num2 = float.Parse(numbers.Pop());
-                    float num1 = float.Parse(numbers.Pop());
-                    // UnityEngine.Debug.Log($"Doing after: {num1}{opperand}{num2}");
-
-                    switch(opperand)
-                    {
-                        case "+":
-                            numbers.Push((num1 + num2).ToString());
-                            break;
-                        case "-":
-                            numbers.Push((num1 - num2).ToString());
-                            break;
-                        case "*":
-                            numbers.Push((num1 * num2).ToString());
-                            break;
-                        case "/":
-                            numbers.Push((num1 / num2).ToString());
-                            break;
-                        case "^":
-                            numbers.Push((Math.Pow(num1, num2)).ToString());
-                            break;
-                        default:
-                            break;
-                    }
+                    PopAndCalc(numbers, opperands);
                 }
 
                 return float.Parse(numbers.Pop());
