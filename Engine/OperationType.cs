@@ -1,10 +1,12 @@
-
-public enum ProblemType
+namespace ComputationEngine
 {
-    
-    Division,
-    Multiplication,
-    Addition,
-    Subtraction
-    
+        public enum OperationType
+    {
+        NonSet,
+        Division,
+        Multiplication,
+        Addition,
+        Subtraction,
+        Exponent
+    }
 }

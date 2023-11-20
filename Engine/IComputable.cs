@@ -1,6 +1,9 @@
-public interface IComputable
+namespace ComputationEngine
 {
-    public float Compute();
-    public float Compute(float num1, float num2);
-    
+    public interface IComputable
+    {
+        public float Compute();
+        public float Compute(float num1, float num2);
+        
+    }
 }
